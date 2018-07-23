@@ -1,0 +1,25 @@
+{
+  "name": "wl_consul",
+  "version": "1.0.0",
+  "description": "Tools for fidelisa wl services",
+  "main": "test.js",
+  "scripts": {
+    "start": "node main.js",
+    "template": "consul-template  -template='./wl.ctmpl:wl.conf' -once"
+  },
+  "author": "Yann-Cyril PELUD",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "ovh": "^2.0.1",
+    "request": "^2.79.0",
+    "winston": "^2.3.1",
+    "yargs": "^6.6.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "winston": "^2.3.1",
+    "xml-escape": "^1.1.0"
+  }
+}

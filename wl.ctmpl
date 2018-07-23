@@ -1,0 +1,52 @@
+{{range service "wl"}}
+  {{$name := .Name}}
+  {{$service := .ID | regexReplaceAll "(.*):(.*)" "$1"}}
+  {{$header := .ID | regexReplaceAll "(.*):(.*)" "$2"}}
+server {
+  listen         80;
+  server_name    {{$service}};
+  return 301     https://{{$service}}$request_uri;
+}
+
+server {
+  listen       443 ssl;
+  server_name  {{$service}};
+
+  ssl_certificate      /etc/ssl/private/wildcard/star_fidelisa_com.pem;
+  ssl_certificate_key  /etc/ssl/private/wildcard/star_fidelisa_com.key;
+
+  rewrite_log on;
+
+  underscores_in_headers on;
+
+  proxy_redirect     off;
+  # delete 15/11/2014 09:34 proxy_buffering off; # new !!
+  proxy_read_timeout 300;
+  proxy_http_version 1.1;
+
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection "upgrade";
+  proxy_set_header Host             $host;
+  proxy_set_header X-Real-IP        $remote_addr;
+  proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for;
+  proxy_set_header Fidelisa_skin  {{$header}};
+
+  location ~ ^/(images|wcc|javascripts|stylesheets|system|patterns)/  {
+    expires max;
+    proxy_pass http://fidelisa-back_www;
+  }
+
+  location /api/customers/closetome {
+    proxy_pass http://fidelisa-node;
+  }
+
+  location / {
+    proxy_pass http://fidelisa-back;
+  }
+
+  location /robots.txt {
+    root /home/production/api/shared/config;
+  }
+}
+
+{{end}}

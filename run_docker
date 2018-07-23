@@ -1,0 +1,2 @@
+#!/bin/sh
+docker run -ti --env-file /root/wl_consul/myenv --link "consul_consul_1:consul"  --net="consul_default"  fidelisa/wl_consul
